@@ -3,7 +3,7 @@ package core
 import "strings"
 
 type BeefService interface {
-	Summary() (Beef, error)
+	Summary() (*Beef, error)
 }
 
 type beefServiceImpl struct {
@@ -14,7 +14,7 @@ func NewBeefService(repo BeefRepository) BeefService {
 	return &beefServiceImpl{repo: repo}
 }
 
-func countBeef(beefs string, summary Beef) {
+func countBeef(beefs string, summary *Beef) {
 	for _, v := range strings.Fields(beefs) {
 		if v != "" {
 			_, ok := summary.Beef[v]
@@ -27,12 +27,12 @@ func countBeef(beefs string, summary Beef) {
 	}
 }
 
-func (s *beefServiceImpl) Summary() (Beef, error) {
+func (s *beefServiceImpl) Summary() (*Beef, error) {
 	summary := Beef{Beef: make(map[string]int)}
 
 	byteData, err := s.repo.GetData()
 	if err != nil {
-		return summary, err
+		return nil, err
 	}
 	data := string(byteData)
 
@@ -43,7 +43,7 @@ func (s *beefServiceImpl) Summary() (Beef, error) {
 	data = strings.ToLower(data)
 
 	// Count
-	countBeef(data, summary)
+	countBeef(data, &summary)
 
-	return summary, nil
+	return &summary, nil
 }
