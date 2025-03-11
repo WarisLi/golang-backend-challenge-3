@@ -17,12 +17,7 @@ func NewBeefService(repo BeefRepository) BeefService {
 func countBeef(beefs string, summary *Beef) {
 	for _, v := range strings.Fields(beefs) {
 		if v != "" {
-			_, ok := summary.Beef[v]
-			if ok {
-				summary.Beef[v]++
-			} else {
-				summary.Beef[v] = 1
-			}
+			summary.Beef[v]++
 		}
 	}
 }
